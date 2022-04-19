@@ -1,0 +1,13 @@
+{
+  "name": "electron-react-starter",
+  "version": "1.0.0",
+  "description": "electron and react starter",
+  "main": "main.js",
+  "author": "Caleb Nance",
+  "scripts": {
+    "start": "electron ."
+  },
+  "devDependencies": {
+    "electron": "^18.0.4"
+  }
+}
