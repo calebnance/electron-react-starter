@@ -3,19 +3,20 @@ import logo from './logo.svg';
 import './App.css';
 
 function App() {
+  const onClick = () => {
+    window.electron.ipcRenderer.ping();
+  };
+
   return (
     <div className="App">
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
+
         <p>Edit &quot;src/App.js&quot; and save to reload.</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+
+        <button onClick={onClick} type="button">
+          Test Ping
+        </button>
       </header>
     </div>
   );

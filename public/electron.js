@@ -1,23 +1,28 @@
 // Module to control the application lifecycle and the native browser window.
-const { app, BrowserWindow, protocol } = require('electron');
+const { app, BrowserWindow, ipcMain, protocol } = require('electron');
 const path = require('path');
 const url = require('url');
 
-// Create the native browser window.
+ipcMain.on('ipc', async (event, arg) => {
+  console.log('arg', arg);
+});
+
+// create the native browser window.
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
     width: 1200,
     height: 700,
-    // Set the path of an additional "preload" script that can be used to
+    // set the path of an additional "preload" script that can be used to
     // communicate between node-land and browser-land.
     webPreferences: {
+      nodeIntegration: false,
       preload: path.join(__dirname, 'preload.js')
     }
   });
 
-  // In production, set the initial browser path to the local bundle generated
+  // in production, set the initial browser path to the local bundle generated
   // by the Create React App build process.
-  // In development, set it to localhost to allow live/hot-reloading.
+  // in development, set it to localhost to allow live/hot-reloading.
   const appURL = app.isPackaged
     ? url.format({
         pathname: path.join(__dirname, 'index.html'),
@@ -27,13 +32,13 @@ const createWindow = () => {
     : 'http://localhost:3000';
   mainWindow.loadURL(appURL);
 
-  // Automatically open Chrome's DevTools in development mode.
+  // automatically open Chrome's DevTools in development mode.
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
 };
 
-// Setup a local proxy to adjust the paths of requested files when loading
+// setup a local proxy to adjust the paths of requested files when loading
 // them from the local production bundle (e.g.: local fonts, etc...).
 function setupLocalFilesNormalizerProxy() {
   protocol.registerHttpProtocol(
@@ -48,9 +53,9 @@ function setupLocalFilesNormalizerProxy() {
   );
 }
 
-// This method will be called when Electron has finished its initialization and
+// this method will be called when Electron has finished its initialization and
 // is ready to create the browser windows.
-// Some APIs can only be used after this event occurs.
+// some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
   createWindow();
   setupLocalFilesNormalizerProxy();
@@ -64,8 +69,8 @@ app.whenReady().then(() => {
   });
 });
 
-// Quit when all windows are closed, except on macOS.
-// There, it's common for applications and their menu bar to stay active until
+// quit when all windows are closed, except on macOS.
+// there, it's common for applications and their menu bar to stay active until
 // the user quits  explicitly with Cmd + Q.
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
@@ -73,7 +78,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-// If your app has no need to navigate or only needs to navigate to known pages,
+// if your app has no need to navigate or only needs to navigate to known pages,
 // it is a good idea to limit navigation outright to that known scope,
 // disallowing any other kinds of navigation.
 const allowedNavigationDestinations = 'https://my-electron-app.com';
@@ -87,5 +92,5 @@ app.on('web-contents-created', (eventMain, contents) => {
   });
 });
 
-// In this file you can include the rest of your app's specific main process
+// in this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
