@@ -1,11 +1,7 @@
 // Module to control the application lifecycle and the native browser window.
-const { app, BrowserWindow, ipcMain, protocol } = require('electron');
+const { app, BrowserWindow, dialog, ipcMain, protocol } = require('electron');
 const path = require('path');
 const url = require('url');
-
-ipcMain.on('ipc', async (event, arg) => {
-  console.log('arg', arg);
-});
 
 // create the native browser window.
 const createWindow = () => {
@@ -36,6 +32,18 @@ const createWindow = () => {
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
   }
+
+  ipcMain.on('ipc', async (event, arg) => {
+    const { type } = arg;
+    console.log('arg', arg);
+
+    if (type === 'select-images') {
+      const selected = await dialog.showOpenDialogSync(mainWindow, {
+        properties: ['openFile', 'multiSelections']
+      });
+      console.log('selected', selected);
+    }
+  });
 };
 
 // setup a local proxy to adjust the paths of requested files when loading

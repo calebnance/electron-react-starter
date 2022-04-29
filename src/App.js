@@ -7,6 +7,10 @@ function App() {
     window.electron.ipcRenderer.ping();
   };
 
+  const selectImages = () => {
+    window.electron.ipcRenderer.selectImages();
+  };
+
   return (
     <div className="App">
       <header className="App-header">
@@ -16,6 +20,10 @@ function App() {
 
         <button onClick={onClick} type="button">
           Test Ping
+        </button>
+
+        <button onClick={selectImages} type="button">
+          Select Images
         </button>
       </header>
     </div>
